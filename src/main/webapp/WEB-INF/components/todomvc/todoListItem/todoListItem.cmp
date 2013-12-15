@@ -1,0 +1,18 @@
+<aura:component>
+    <aura:attribute name="item" type="java://todomvc.models.TodoModel"/>
+	<aura:attribute name="mode" type="String" default="view"/>
+	
+	<li class="{!(v.mode == 'edit' ? 'editing' : '') + ' ' + (v.item.completed == true ? 'completed' : '')}" dblclick="{!v.edit}">
+		<div class="view">
+			<ui:inputCheckbox class="toggle" value="{!v.item.completed}" change="{!c.complete}" />
+			<aura:if isTrue="{!v.mode == 'view'}">
+				<label ondblclick="{!c.edit}">{!v.item.value}</label>
+				<ui:button class="destroy" label="" theme="" />
+			</aura:if>
+		</div>
+		<ui:inputText aura:id="new-todo" class="edit" value="{!v.item.value}" change="{!c.handleChange}" blur="{!c.handleChange}" keyup="{!c.handleChange}" placeholder="{!v.placeholder}" />
+		<!--
+		<todomvc:todo id="{!v.item.id}" value="{!v.item.value}" completed="{!v.item.completed}" aura:id="new-todo" editClass="edit" mode="{!v.mode}" />
+		-->
+	</li>
+</aura:component>

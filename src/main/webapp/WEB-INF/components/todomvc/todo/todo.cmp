@@ -1,0 +1,24 @@
+<aura:component> <!-- controller="java://todomvc.controllers.TodoController"> -->
+	<!--<aura:attribute name="item" type="java://todomvc.models.TodoModel"/>-->
+	<aura:attribute name="id" type="Long"/>
+	<aura:attribute name="value" type="String"/>
+	<aura:attribute name="completed" type="Boolean" default="false"/>
+	<aura:attribute name="editClass" type="String" default="edit"/>
+	<aura:attribute name="mode" type="String" default="view"/>
+	<aura:attribute name="placeholder" type="String" default="What needs to be done?"/>
+	
+<!--
+		<div class="view">
+			<ui:inputCheckbox class="toggle" value="{!v.item.completed}" change="{!c.complete}" />
+			<aura:if isTrue="{!v.mode == 'view'}">
+				<label ondblclick="{!c.edit}">{!v.item.value}</label>
+				<ui:button class="destroy" label="" theme="" />
+			</aura:if>
+		</div>
+-->
+<!--	
+		<input id="{!v.aura_id}" type="text" class="edit" value="{!v.item.value}" change="{!c.save}" onblur="{!c.save}" onkeyup="{!c.save}" placeholder="{!v.placeholder}" />
+-->
+		<ui:inputText aura:id="new-todo" class="{!v.editClass}" value="{!v.item.value}" change="{!c.save}" blur="{!c.save}" keyup="{!c.save}" placeholder="{!v.placeholder}" />
+		
+</aura:component>
