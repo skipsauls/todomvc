@@ -7,10 +7,10 @@
 			<ui:inputCheckbox class="toggle" value="{!v.item.completed}" change="{!c.complete}" />
 			<aura:if isTrue="{!v.mode == 'view'}">
 				<label ondblclick="{!c.edit}">{!v.item.value}</label>
-				<ui:button class="destroy" label="" theme="" />
+				<ui:button class="destroy" label="" theme="" press="{!c.destroy}" />
 			</aura:if>
 		</div>
-		<ui:inputText aura:id="new-todo" class="edit" value="{!v.item.value}" change="{!c.handleChange}" blur="{!c.handleChange}" keyup="{!c.handleChange}" placeholder="{!v.placeholder}" />
+		<ui:inputText aura:id="new-todo" class="new-todo edit" value="{!v.item.value}" change="{!c.handleChange}" blur="{!c.handleChange}" keyup="{!c.handleChange}" placeholder="{!v.placeholder}" />
 		<!--
 		<todomvc:todo id="{!v.item.id}" value="{!v.item.value}" completed="{!v.item.completed}" aura:id="new-todo" editClass="edit" mode="{!v.mode}" />
 		-->

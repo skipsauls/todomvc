@@ -1,4 +1,5 @@
 <aura:component model="java://todomvc.models.TodoListModel">
+	<aura:attribute name="fnord" type="String"/>
 	
 	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 	
@@ -11,11 +12,8 @@
 		defaultExpiration="600" 
 		defaultAutoRefreshInterval="600" />
 	
-	<div id="templatesBlock" style="display: none">	
-		<todomvc:todoListItem aura:id="new-item" item="{!item}"/>
-	</div>
+
 		
-	<ui:button press="{!c.refresh}" label="Refresh"/>
 	<ul aura:id="todo-list" id="todo-list">
 		<aura:iteration items="{!m.items}" var="item" indexVar="index">
 			<todomvc:todoListItem aura:id="new-todo" item="{!item}" />
@@ -25,7 +23,7 @@
 				<div class="view">
 					<ui:inputCheckbox class="toggle" value="{!item.completed}" change="{!c.complete}" />
 					<label ondblclick="{!c.editItem}">{!item.value}</label>
-					<ui:button class="destroy" label="" theme="" />
+					<ui:button class="destroy" onclick="{!c.destroyItem}" label="" theme="" />
 				</div>
 				<ui:inputText aura:id="new-todo" class="edit" value="{!item.value}" change="{!c.save}" blur="{!c.save}" keyup="{!c.save}" placeholder="{!v.placeholder}" />
 			</li>			

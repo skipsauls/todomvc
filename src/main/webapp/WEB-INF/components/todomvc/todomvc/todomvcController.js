@@ -41,52 +41,23 @@
 */      
   },
   
-  destroy: function(component, evt) {
-      console.warn('todoListItemController.destroy for: ', component);
-      
-      var item = component.get("v.item");
-      var id = item.id;
-      console.warn("item: ", item);
-      
-      var storage = window.localStorage;
-      console.warn('storage: ', storage);
-      var todos = storage.getItem("todos");
-      todos = todos ? JSON.parse(todos) : {};
-      delete todos["" + item.id];
-      storage.setItem("todos", JSON.stringify(todos));
-      var todoList = $A.getRoot().find("todo-list");
-      var items = todoList.getValue("m.items");
-      var item = null;
-      for (var i = 0; i < items.getLength(); i++) {
-          item = items.get(i);
-          if (item.id == id) {
-              items.remove(i);
-          }
-      }
-      /*
-      items.each(function(item) {
-         if (item.getValue("id").getValue() == id) {
-             delete item;
-         } 
-      });
-      */
-  },
-  
   handleChange: function(component, evt) {
-    console.warn('todoListItemController.handleChange for: ', component);
-
-    
-    if (evt.getName() == 'keyup' && evt.getParams().keyCode != 13) {
-      
-    } else {
-      var attributes = component.getAttributes();
-      var mode = attributes.getRawValue("mode");
-      aura.log("mode: " + mode);
-      attributes.setValue("mode", "view");
-      
-      var a = component.get("c.save");
+      console.warn('todomvcController.handleChange for: ', component, evt);
+      var target = evt.target;
+      var value = target.value;
+      var todoList = $A.getRoot().find("todo-list");
+      var a = todoList.get("c.createTodo");
+        
+      // Not working, or not understood?
+      /*
+      a.setParams({
+          value: value
+      });
       $A.enqueueAction(a);
-    }
+      */
+      
+      a.run(value);
+      target.value = "";
   },
   
   complete: function(component, evt) {
@@ -95,8 +66,5 @@
     var checked = evt.getSource().getElement().checked;
     var attributes = component.getAttributes();
     attributes.setValue("complete", checked);
-    
-    var a = component.get("c.save");
-    $A.enqueueAction(a);
   }
 })
