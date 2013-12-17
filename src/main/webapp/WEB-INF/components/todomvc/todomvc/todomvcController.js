@@ -2,6 +2,10 @@
     doInit: function(component) {
         console.warn("todomvcController.doInit");
 
+        var location = $A.historyService.get().token;
+        location = location == "" ? "/" : location;
+        $A.historyService.set(location);
+
         var items = component.getValue("m.todos");
         var storage = window.localStorage;
         var todos = storage.getItem("todos");
