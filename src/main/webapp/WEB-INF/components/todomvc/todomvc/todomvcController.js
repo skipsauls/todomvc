@@ -1,140 +1,57 @@
 ({
-  doInit: function(component) {
+  doInit: function(component, evt, helper) {
     var location = $A.historyService.get().token;
     location = location == "" ? "/" : location;
     $A.historyService.set(location);
 
     var items = component.getValue("m.todos");
-    var storage = window.localStorage;
-    var todos = storage.getItem("todos");
 
-    if (todos) {
-      todos = JSON.parse(todos);
-    } else {
-      todos = {};
-      storage.setItem("todos", JSON.stringify(todos));
-    }
+    var todos = helper.loadTodos(component);
     var todo = null;
-    for ( var id in todos) {
+    for (var id in todos) {
       todo = todos[id];
-      todo.mode = "view";
       items.push(todo);
     }
-
-    var a = component.get("c.updateCounts");
-    a.run();
   },
 
-  handleLocationChangeEvent: function(component, evt) {
+  handleLocationChangeEvent: function(component, evt, helper) {
     var attributes = component.getAttributes();
     attributes.setValue("location", evt.getParam("token"));
+    helper.updateAll(component);
   },
 
-  updateCounts: function(component) {
-    var items = component.getValue("m.todos");
-    var item = null;
-    var remainingCount = 0;
-    for (var i = 0; i < items.getLength(); i++) {
-      item = items.get(i);
-      remainingCount += !(item.completed) ? 1 : 0;
-    }
-    component.setValue("v.remainingCount", remainingCount);
-  },
-
-  toggleAll: function(component, evt) {
+  toggleAll: function(component, evt, helper) {
     var target = evt.getSource();
     var checked = target.getElement().checked;
 
     var items = component.getValue("m.todos");
-
-    // This seems like too much effort...
-    var todos = [];
-    var item = null;
-    for (var i = 0; i < items.getLength(); i++) {
-      item = items.get(i);
-      todos.push(item);
+    var todos = helper.loadTodos(component);
+    var todo = null;
+    for (var id in todos) {
+      todo = todos[id];
+      todo.completed = checked;     
     }
-    items.clear();
-
-    for (var i = 0; i < todos.length; i++) {
-      todos[i].completed = checked;
-      items.push(todos[i]);
-    }
-
-    var storage = window.localStorage;
-    var todos = storage.getItem("todos");
-
-    todos = todos ? JSON.parse(todos) : {};
-
-    var item = null;
-    for (var i = 0; i < items.getLength(); i++) {
-      item = items.get(i);
-      todos["" + item.id] = item;
-    }
-
-    storage.setItem("todos", JSON.stringify(todos));
-
-    var a = component.get("c.updateCounts");
-    a.run();
+    
+    helper.saveTodos(component, todos);
   },
 
-  saveAll: function(component) {
-    var items = component.getValue("m.items");
-    var storage = window.localStorage;
-    var todos = storage.getItem("todos");
-
-    todos = todos ? JSON.parse(todos) : {};
-
-    var item = null;
-    for (var i = 0; i < items.getLength(); i++) {
-      item = items.get(i);
-      todos["" + item.id] = item;
-    }
-
-    storage.setItem("todos", JSON.stringify(todos));
-
-    var a = component.get("c.updateCounts");
-    a.run();
-  },
-
-  clearCompletedTodos: function(component, evt) {
+  clearCompletedTodos: function(component, evt, helper) {
     var items = component.getValue("m.todos");
-    var storage = window.localStorage;
-    var todos = storage.getItem("todos");
+    var todos = helper.loadTodos(component);
 
-    todos = todos ? JSON.parse(todos) : {};
-
-    var item = null;
-    for (var i = items.getLength() - 1; i >= 0; i--) {
-      item = items.get(i);
-      if (item.completed == true) {
-        items.remove(i);
-        delete todos["" + item.id];
+    var todo = null;
+    for (var id in todos) {
+      todo = todos[id];
+      if (todo.completed) {
+        delete todos[id];
       }
     }
-
-    storage.setItem("todos", JSON.stringify(todos));
-
-    var a = component.get("c.updateCounts");
-    a.run();
+    
+    helper.saveTodos(component, todos);
+    helper.updateAll(component);
   },
-
-  saveTodo: function(component, todo) {
-    var items = component.getValue("m.items");
-    var storage = window.localStorage;
-    var todos = storage.getItem("todos");
-
-    todos = todos ? JSON.parse(todos) : {};
-    todos["" + todo.id] = todo;
-
-    storage.setItem("todos", JSON.stringify(todos));
-
-    var a = component.get("c.updateCounts");
-    a.run();
-  },
-
-  newTodo: function(component, evt) {
-    var items = component.getValue("m.todos");
+  
+  newTodo: function(component, evt, helper) {
     var target = evt.target;
     var value = target.value;
 
@@ -144,43 +61,20 @@
       completed: false
     }
 
-    items.push(todo);
-
+    helper.updateTodo(component, todo);
+    
     target.value = "";
-
-    var a = component.get("c.saveTodo");
-    a.run(todo);
   },
 
-  removeTodo: function(component, todo) {
-
-    var items = component.getValue("m.todos");
-    var storage = window.localStorage;
-    var todos = storage.getItem("todos");
-
-    todos = todos ? JSON.parse(todos) : {};
-
-    delete todos["" + todo.id];
-
-    storage.setItem("todos", JSON.stringify(todos));
-
-    var item = null;
-    for (var i = 0; i < items.getLength(); i++) {
-      item = items.get(i);
-      if (item.id == todo.id) {
-        items.remove(i);
-      }
-    }
-
-    var a = component.get("c.updateCounts");
-    a.run();
-  },
-
-  handleTodoModifiedEvent: function(component, event) {
+  
+  handleTodoUpdateEvent: function(component, event, helper) {
     var params = event.getParams();
-    var action = params["action"];
-    var actionName = action === "remove" ? "c.removeTodo" : "c.saveTodo";
-    var a = component.get(actionName);
-    a.run(params);
+    helper.updateTodo(component, params);
+  },
+
+  handleTodoDeleteEvent: function(component, event, helper) {
+    var params = event.getParams();
+    var items = component.getValue("m.todos");
+    helper.deleteTodo(component, params, items);
   }
 })

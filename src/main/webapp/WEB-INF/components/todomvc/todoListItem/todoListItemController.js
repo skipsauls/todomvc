@@ -1,5 +1,15 @@
 ({
-  edit: function(component) {
+  doInit: function(component, evt, helper) {
+    var attributes = component.getAttributes();
+    var model = component.getModel();
+    var todo = attributes.getRawValue("todo");
+
+    model.each(function(key, value) {
+      value.setValue(todo.getRawValue(key));
+    });
+  },
+  
+  edit: function(component, evt, helper) {
     var attributes = component.getAttributes();
     var mode = attributes.getRawValue("mode");
     attributes.setValue("mode", "edit");
@@ -12,45 +22,30 @@
     }, 100);
   },
 
-  save: function(component) {
+  remove: function(component, evt, helper) {
+    var model = component.getModel();
     var attributes = component.getAttributes();
-    var todoModifiedEvent = $A.get("e.todomvc:todoModified");
+    var todoDeleteEvent = $A.get("e.todomvc:todoDelete");
     
-    todoModifiedEvent.setParams({
-      "action": "update",
-      "id": attributes.getRawValue("id"),
-      "value": attributes.getRawValue("value"),
-      "completed": attributes.getRawValue("completed")
+    todoDeleteEvent.setParams({
+      "id": model.value.id.getValue()
     });
 
-    todoModifiedEvent.fire();    
+    todoDeleteEvent.fire();    
   },
 
-  remove: function(component, evt) {
-    var attributes = component.getAttributes();
-    var todoModifiedEvent = $A.get("e.todomvc:todoModified");
-    
-    todoModifiedEvent.setParams({
-      "action": "remove",
-      "id": attributes.getRawValue("id")
-    });
-
-    todoModifiedEvent.fire();    
-  },
-
-  update: function(component, evt) {
+  update: function(component, evt, helper) {
     var attributes = component.getAttributes();
     var mode = attributes.getRawValue("mode");
     attributes.setValue("mode", "view");
-    var a = component.get("c.save");
-    $A.enqueueAction(a);
+    helper.save(component);
   },
 
-  complete: function(component, evt) {
-    var checked = evt.getSource().getElement().checked;
-    var attributes = component.getAttributes();
-    attributes.setValue("completed", checked);
-    var a = component.get("c.save");
-    $A.enqueueAction(a);
+  complete: function(component, evt, helper) {
+    var model = component.getModel();
+    var target = evt.getSource ? evt.getSource().getElement() : evt.target;
+    var checked = target.checked;
+    model.value.completed.setValue(checked);
+    helper.save(component);
   }
 })
