@@ -61,4 +61,4 @@
     
     this.saveTodos(component, todos);
   }  
-})
+});

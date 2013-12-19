@@ -1,7 +1,7 @@
 ({
   doInit: function(component, evt, helper) {
     var location = $A.historyService.get().token;
-    location = location == "" ? "/" : location;
+    location = location === "" ? "/" : location;
     $A.historyService.set(location);
 
     var items = component.getValue("m.todos");
@@ -59,7 +59,7 @@
       id: Date.now(),
       value: value,
       completed: false
-    }
+    };
 
     helper.updateTodo(component, todo);
     
@@ -77,4 +77,4 @@
     var items = component.getValue("m.todos");
     helper.deleteTodo(component, params, items);
   }
-})
+});

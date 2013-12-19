@@ -48,4 +48,4 @@
     model.value.completed.setValue(checked);
     helper.save(component);
   }
-})
+});

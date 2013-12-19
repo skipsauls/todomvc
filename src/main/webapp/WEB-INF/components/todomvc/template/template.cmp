@@ -15,7 +15,7 @@
   
 	<aura:set attribute="auraInitBlock">
 		<script>
-			document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+			document.addEventListener("touchmove", function (e) { e.preventDefault(); }, false);
 		</script>
 	</aura:set>	
 </aura:component>

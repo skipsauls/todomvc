@@ -6,4 +6,4 @@
     updateTodoEvent.setParams(model.unwrap());
     updateTodoEvent.fire();
   }
-})
+});
