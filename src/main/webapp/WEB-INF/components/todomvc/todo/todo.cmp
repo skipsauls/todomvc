@@ -2,8 +2,8 @@
 	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 	<aura:attribute name="todo" type="Object"/>
 	<aura:attribute name="mode" type="String" default="view"/>
-	<aura:registerEvent name="todoUpdate" type="todomvc:todoUpdate"/>
-	<aura:registerEvent name="todoDelete" type="todomvc:todoDelete"/>
+	<aura:registerEvent name="updateTodo" type="todomvc:updateTodo"/>
+	<aura:registerEvent name="deleteTodo" type="todomvc:deleteTodo"/>
 	
 	<li class="{!(v.mode == 'edit' ? 'editing' : '') + ' ' + (m.completed == true ? 'completed' : '')}" dblclick="{!v.edit}">
 		<div class="view">

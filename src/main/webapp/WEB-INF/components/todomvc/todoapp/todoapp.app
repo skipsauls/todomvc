@@ -1,10 +1,10 @@
 <aura:application template="todomvc:template" useAppCache="false">
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
   <aura:handler event="aura:locationChange" action="{!c.handleLocationChangeEvent}" />
-  
-  <aura:handler event="todomvc:todoUpdate" action="{!c.handleTodoUpdateEvent}" />
-  <aura:handler event="todomvc:todoDelete" action="{!c.handleTodoDeleteEvent}" />
-  
+
+  <aura:handler event="todomvc:updateTodo" action="{!c.handleupdateTodoEvent}" />
+  <aura:handler event="todomvc:deleteTodo" action="{!c.handledeleteTodoEvent}" />
+
   <aura:attribute name="remainingCount" type="Long" default="0" />
   <aura:attribute name="location" type="String" default="/" />
 
@@ -15,13 +15,14 @@
     </header>
     <section id="main">
       <aura:renderIf isTrue="{!m.todos.length > 0}">
-        <ui:inputCheckbox class="toggle-all" value="{!and(v.remainingCount == 0, m.todos.length > 0)}" change="{!c.toggleAll}"/>
+        <ui:inputCheckbox class="toggle-all" value="{!and(v.remainingCount == 0, m.todos.length > 0)}" change="{!c.toggleAll}" />
       </aura:renderIf>
       <label for="toggle-all">Mark all as complete</label>
       <ul aura:id="todo-list" id="todo-list">
         <aura:iteration items="{!m.todos}" var="todo" indexVar="index">
-          <aura:renderIf isTrue="{!or(v.location == '/', or(and(v.location == '/active', todo.completed == false), or(and(v.location == '/completed', todo.completed == true))))}">
-            <todomvc:todoListItem aura:id="{!'todo_' + todo.id}" todo="{!todo}"/>
+          <aura:renderIf
+            isTrue="{!or(v.location == '/', or(and(v.location == '/active', todo.completed == false), or(and(v.location == '/completed', todo.completed == true))))}">
+            <todomvc:todo aura:id="{!'todo_' + todo.id}" todo="{!todo}" />
           </aura:renderIf>
         </aura:iteration>
       </ul>
@@ -54,16 +55,14 @@
       </footer>
     </aura:renderIf>
   </section>
-  
+
   <footer id="info">
     <p>Double-click to edit a todo</p>
     <p>
-      Created by
-      <a href="https://github.com/skipsauls">Skip Sauls</a>
+      Created by <a href="https://github.com/skipsauls">Skip Sauls</a>
     </p>
     <p>
-      Part of
-      <a href="http://todomvc.com">TodoMVC</a>
+      Part of <a href="http://todomvc.com">TodoMVC</a>
     </p>
   </footer>
 

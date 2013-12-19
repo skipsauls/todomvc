@@ -67,12 +67,12 @@
   },
 
   
-  handleTodoUpdateEvent: function(component, event, helper) {
+  handleupdateTodoEvent: function(component, event, helper) {
     var params = event.getParams();
     helper.updateTodo(component, params);
   },
 
-  handleTodoDeleteEvent: function(component, event, helper) {
+  handledeleteTodoEvent: function(component, event, helper) {
     var params = event.getParams();
     var items = component.getValue("m.todos");
     helper.deleteTodo(component, params, items);

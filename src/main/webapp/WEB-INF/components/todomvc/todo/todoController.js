@@ -25,13 +25,13 @@
   remove: function(component, evt, helper) {
     var model = component.getModel();
     var attributes = component.getAttributes();
-    var todoDeleteEvent = $A.get("e.todomvc:todoDelete");
+    var deleteTodoEvent = $A.get("e.todomvc:deleteTodo");
     
-    todoDeleteEvent.setParams({
+    deleteTodoEvent.setParams({
       "id": model.value.id.getValue()
     });
 
-    todoDeleteEvent.fire();    
+    deleteTodoEvent.fire();    
   },
 
   update: function(component, evt, helper) {

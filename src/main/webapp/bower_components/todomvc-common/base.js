@@ -205,5 +205,5 @@
 	};
 
 	redirect();
-	getFile('/todomvc/learn.json', Learn);
+	getFile('/learn.json', Learn);
 })();
