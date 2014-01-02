@@ -1,10 +1,8 @@
 <aura:application template="todomvc:template" useAppCache="false">
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
   <aura:handler event="aura:locationChange" action="{!c.handleLocationChangeEvent}" />
-
   <aura:handler event="todomvc:updateTodo" action="{!c.handleupdateTodoEvent}" />
   <aura:handler event="todomvc:deleteTodo" action="{!c.handledeleteTodoEvent}" />
-
   <aura:attribute name="remainingCount" type="Long" default="0" />
   <aura:attribute name="location" type="String" default="/" />
 
@@ -56,7 +54,7 @@
     </aura:renderIf>
   </section>
 
-  <footer id="info">
+  <footer id="info" class="info">
     <p>Double-click to edit a todo</p>
     <p>
       Created by <a href="https://github.com/skipsauls">Skip Sauls</a>

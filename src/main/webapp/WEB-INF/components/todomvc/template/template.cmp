@@ -1,4 +1,4 @@
-<aura:component isTemplate="true" extends="aura:template" style="templateCss://todomvc.template">
+<aura:component isTemplate="true" extends="aura:template">
 	<aura:set attribute="title" value="Aura • TodoMVC"/>
 
 	<aura:set attribute="extraMetaTags">
