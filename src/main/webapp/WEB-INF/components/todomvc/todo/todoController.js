@@ -1,51 +1,53 @@
 ({
   doInit: function(component, evt, helper) {
     var attributes = component.getAttributes();
-    var model = component.getModel();
-    var todo = attributes.getRawValue("todo");
-
-    model.each(function(key, value) {
-      value.setValue(todo.getRawValue(key));
-    });
+    var todo = attributes.getValue("todo");
+    todo.each(function(key, value) {
+      attributes.getValue(key).setValue(todo.getRawValue(key));
+    })
   },
-  
+
   edit: function(component, evt, helper) {
     var attributes = component.getAttributes();
-    var mode = attributes.getRawValue("mode");
     attributes.setValue("mode", "edit");
     var editor = component.find("new-todo").getElement();
+    editor.selectionStart = editor.selectionEnd = editor.value.length;
 
     // Wait and then set focus and move cursor to end
     setTimeout(function() {
       editor.focus();
-      editor.selectionStart = editor.selectionEnd = editor.value.length;
-    }, 100);
+    }, 10);
   },
 
   remove: function(component, evt, helper) {
-    var model = component.getModel();
     var attributes = component.getAttributes();
     var deleteTodoEvent = $A.get("e.todomvc:deleteTodo");
-    
     deleteTodoEvent.setParams({
-      "id": model.value.id.getValue()
-    });
-
-    deleteTodoEvent.fire();    
+      "id": attributes.getRawValue("id")
+    }).fire();
   },
 
   update: function(component, evt, helper) {
     var attributes = component.getAttributes();
-    var mode = attributes.getRawValue("mode");
-    attributes.setValue("mode", "view");
-    helper.save(component);
+    var evt = {
+      id: attributes.getRawValue("id"),
+      value: attributes.getRawValue("value"),
+      completed: attributes.getRawValue("completed")
+    };
+    var updateTodoEvent = $A.get("e.todomvc:updateTodo");
+    updateTodoEvent.setParams(evt).fire();
+    //attributes.setValue("mode", "view");
   },
 
   complete: function(component, evt, helper) {
-    var model = component.getModel();
     var target = evt.getSource ? evt.getSource().getElement() : evt.target;
-    var checked = target.checked;
-    model.value.completed.setValue(checked);
-    helper.save(component);
+    var attributes = component.getAttributes();
+    var evt = {
+      id: attributes.getRawValue("id"),
+      value: attributes.getRawValue("value"),
+      completed: target.checked
+    };
+    var updateTodoEvent = $A.get("e.todomvc:updateTodo");
+    updateTodoEvent.setParams(evt).fire();
   }
 });

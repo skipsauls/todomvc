@@ -4,8 +4,9 @@
   <aura:handler event="todomvc:updateTodo" action="{!c.handleupdateTodoEvent}" />
   <aura:handler event="todomvc:deleteTodo" action="{!c.handledeleteTodoEvent}" />
   <aura:attribute name="remainingCount" type="Long" default="0" />
+  <aura:attribute name="completedCount" type="Long" default="0" />
   <aura:attribute name="location" type="String" default="/" />
-
+  <aura:attribute name="filtered" type="List"/>
   <section id="todoapp">
     <header id="header">
       <h1>todos</h1>
@@ -17,21 +18,26 @@
       </aura:renderIf>
       <label for="toggle-all">Mark all as complete</label>
       <ul aura:id="todo-list" id="todo-list">
+      
+        <aura:iteration items="{!v.filtered}" var="todo" indexVar="index">
+          <todomvc:todo todo="{!todo}"/>
+        </aura:iteration>
+         
+        <!--
         <aura:iteration items="{!m.todos}" var="todo" indexVar="index">
           <aura:renderIf
             isTrue="{!or(v.location == '/', or(and(v.location == '/active', todo.completed == false), or(and(v.location == '/completed', todo.completed == true))))}">
-            <todomvc:todo aura:id="{!'todo_' + todo.id}" todo="{!todo}" />
+         	<todomvc:todo todo="{!todo}"/>
           </aura:renderIf>
         </aura:iteration>
+
+        -->
       </ul>
-
     </section>
-
     <aura:renderIf isTrue="{!m.todos.length > 0}">
       <footer id="footer">
-        <span id="todo-count">
-          <strong>{!v.remainingCount}</strong>
-          {!v.remainingCount != 1 ? ' items' : ' item'} left
+        <span id="todo-count"><strong>{!v.remainingCount}</strong>
+          {!v.remainingCount != 1 ? ' items' : ' item'} left - completed: {!v.completedCount}
         </span>
         <ul id="filters">
           <li>
@@ -46,22 +52,22 @@
             </a>
           </li>
         </ul>
-        <aura:renderIf isTrue="{!(m.todos.length - v.remainingCount) > 0}">
-          <button id="clear-completed" onclick="{!c.clearCompletedTodos}">Clear completed ({!m.todos.length - v.remainingCount})
+        <button id="clear-completed" onclick="{!c.clearCompletedTodos}" style="{!v.completedCount > 0 ? '' : 'display: none'}">Clear completed ({!v.completedCount})
+        </button>
+        <!--
+        <aura:renderIf isTrue="{!v.completedCount > 0}">
+          <button id="clear-completed" onclick="{!c.clearCompletedTodos}">Clear completed ({!v.completedCount})
           </button>
         </aura:renderIf>
+        -->
       </footer>
     </aura:renderIf>
   </section>
-
   <footer id="info" class="info">
     <p>Double-click to edit a todo</p>
-    <p>
-      Created by <a href="https://github.com/skipsauls">Skip Sauls</a>
+    <p>Created by
+      <a href="https://github.com/skipsauls">Skip Sauls</a>
     </p>
-    <p>
-      Part of <a href="http://todomvc.com">TodoMVC</a>
-    </p>
+    <p>Part of<a href="http://todomvc.com">TodoMVC</a></p>
   </footer>
-
 </aura:application>

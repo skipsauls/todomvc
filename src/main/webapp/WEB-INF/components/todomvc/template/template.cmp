@@ -8,11 +8,11 @@
   	<aura:set attribute="extraStyleTags">
     	<link rel="stylesheet" href="/bower_components/todomvc-common/base.css"/>
   	</aura:set>
-  	
+    
   	<aura:set attribute="extraScriptTags">
   		<script src="/bower_components/todomvc-common/base.js"></script>
   	</aura:set>
-  
+    
 	<aura:set attribute="auraInitBlock">
 		<script>
 			document.addEventListener("touchmove", function (e) { e.preventDefault(); }, false);

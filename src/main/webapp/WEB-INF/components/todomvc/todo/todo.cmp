@@ -2,17 +2,29 @@
 	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 	<aura:attribute name="todo" type="Object"/>
 	<aura:attribute name="mode" type="String" default="view"/>
-	<aura:registerEvent name="updateTodo" type="todomvc:updateTodo"/>
+    <aura:attribute name="id" type="String" default=""/>
+    <aura:attribute name="value" type="String" default=""/>
+    <aura:attribute name="completed" type="Boolean" default="false"/>
+    <!--
+    <aura:handler event="todomvc:updateTodo" action="{!c.handleupdateTodoEvent}" />
+    -->
+    <aura:registerEvent name="updateTodo" type="todomvc:updateTodo"/>
 	<aura:registerEvent name="deleteTodo" type="todomvc:deleteTodo"/>
-	
-	<li class="{!(v.mode == 'edit' ? 'editing' : '') + ' ' + (m.completed == true ? 'completed' : '')}" dblclick="{!v.edit}">
+
+	<li aura:id="todo" id="{!'todo_' + v.todo.id}" class="{!(v.mode == 'edit' ? 'editing' : '') + ' ' + (v.completed == true ? 'completed' : '')}" dblclick="{!v.edit}">
 		<div class="view">
-  			<input type="checkbox" class="toggle" checked="{!m.completed ? 'checked' : ''}" onchange="{!c.complete}" />
+  			<input id="{!'completed_' + v.todo.id}" type="checkbox" class="toggle" checked="{!v.completed ? 'checked' : ''}" onchange="{!c.complete}" />
 			<aura:if isTrue="{!v.mode == 'view'}">
-				<label ondblclick="{!c.edit}">{!m.value}</label>
+				<label ondblclick="{!c.edit}">{!v.value}</label>
 				<ui:button class="destroy" label="" theme="" press="{!c.remove}" />
+                <!--
+                <button class="destroy" onclick="{!c.remove}"/>
+                -->
 			</aura:if>
 		</div>
-		<ui:inputText aura:id="new-todo" class="new-todo edit" value="{!m.value}" change="{!c.update}" blur="{!c.update}" placeholder="{!v.placeholder}" />
+		<ui:inputText aura:id="new-todo" class="new-todo edit" value="{!v.value}" change="{!c.update}" blur="{!c.update}" placeholder="{!v.placeholder}"/>
+        <!--
+        -->
 	</li>
+		
 </aura:component>

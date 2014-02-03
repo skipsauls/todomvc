@@ -1,64 +1,87 @@
 ({
-  updateCounts: function(component, todos) {
-    var remainingCount = 0;
-    var todo = null;
-    for (var id in todos) {
-      todo = todos[id];
-      remainingCount += !(todo.completed) ? 1 : 0;
-    }
+  updateCounts: function(component) {
+    var todos = component.getValue("m.todos");
+    var completedCount = 0;
+    todos.each(function(t, i) {
+      completedCount += t.unwrap().completed ? 1 : 0;
+    });
+    var remainingCount = todos.getLength() - completedCount;
     component.setValue("v.remainingCount", remainingCount);
+    component.setValue("v.completedCount", completedCount);
+    this.filter(component);
+  },
+
+  filter: function(component) {
+    var location = component.getAttributes().getRawValue("location");
+    var items = [];
+    var fn = this.filters[location.replace("/", "")];
+    var todos = component.getValue("m.todos");
+    todos.each(function(t, i) {
+      if (!fn || fn(t.unwrap())) {
+        items.push(t.unwrap());
+      }
+    });
+    var filtered = component.getAttributes().getRawValue("filtered");
+    filtered.setValue(items);
   },
   
-  updateItems: function(component, todos) {
-    var items = component.getValue("m.todos");
-    items.clear();
-    
-    var todo = null;
-    for (var id in todos) {
-      todo = todos[id];
-      items.push(todo);
+  filters: {
+    active: function(todo) {
+      return !todo.completed;
+    },
+    completed: function(todo) {
+      return todo.completed;
     }
+  },
+  
+  createTodo: function(component, todo) {
+    todo.id = todo.id || "" + Date.now();
+    var todos = component.getValue("m.todos");
+    todos.push(todo);
+    this.saveTodos(component);
   },
   
   loadTodos: function(component) {
     var storage = window.localStorage;
     var todos = storage.getItem("todos");
+    todos = todos ? JSON.parse(todos) : {};
 
-    if (todos) {
-      todos = JSON.parse(todos);
-    } else {
-      todos = {};
-      storage.setItem("todos", JSON.stringify(todos));
+    var items = component.getValue("m.todos");
+    items.clear();
+    for ( var i in todos) {
+      items.push(todos[i]);
     }
     
-    this.updateCounts(component, todos);
-    
-    return todos;
-  },
-  
-  saveTodos: function(component, todos) {
-    var storage = window.localStorage;
-    storage.setItem("todos", JSON.stringify(todos));
-    this.updateItems(component, todos);
-    this.updateCounts(component, todos);
-  },
-  
-  updateTodo: function(component, todo, helper) {
-    var todos = this.loadTodos(component);
-    todos["" + todo.id] = todo;
-    this.saveTodos(component, todos);
+    this.updateCounts(component);
   },
 
-  updateAll: function(component) {
-    var todos = this.loadTodos(component);
-    this.updateItems(component, todos);
-    this.updateCounts(component, todos);
+  saveTodos: function(component) {
+    var todos = component.getValue("m.todos");
+    var storage = window.localStorage;
+    storage.setItem("todos", JSON.stringify(todos.unwrap()));
+    this.updateCounts(component);
   },
-  
-  deleteTodo: function(component, todo, items) {
-    var todos = this.loadTodos(component);
-    delete todos["" + todo.id];
-    
-    this.saveTodos(component, todos);
-  }  
+
+  updateTodo: function(component, todo) {
+    var todos = component.getValue("m.todos");
+    todos.each(function(t, i) {
+      if (t.getValue("id").getValue() === todo.id) {
+        t.getValue("value").setValue(todo.value);
+        t.getValue("completed").setValue(todo.completed);
+      }
+    });
+    this.saveTodos(component);
+  },
+
+  deleteTodo: function(component, todo) {
+    var todos = component.getValue("m.todos");
+    var items = [];
+    todos.each(function(t) {
+      if (t.unwrap().id !== todo.id) {
+        items.push(t.unwrap())
+      }
+    });
+    todos.setValue(items);
+    this.saveTodos(component);
+  }
 });
