@@ -12,7 +12,7 @@
     attributes.setValue("location", location);
     helper.filter(component);
   },
-  
+
   toggleAll: function(component, evt, helper) {
     var checked = evt.getSource().getElement().checked;
     var todos = component.getValue("m.todos");
@@ -21,7 +21,7 @@
     }
     helper.saveTodos(component, todos);
   },
-  
+
   clearCompletedTodos: function(component, evt, helper) {
     var todos = component.getValue("m.todos");
     var items = [];
@@ -33,7 +33,7 @@
     todos.setValue(items);
     helper.saveTodos(component, todos);
   },
-  
+
   newTodo: function(component, evt, helper) {
     helper.createTodo(component, {
       id: null,

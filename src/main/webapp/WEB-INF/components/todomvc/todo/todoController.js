@@ -1,12 +1,4 @@
 ({
-  doInit: function(component, evt, helper) {
-    var attributes = component.getAttributes();
-    var todo = attributes.getValue("todo");
-    todo.each(function(key, value) {
-      attributes.getValue(key).setValue(todo.getRawValue(key));
-    })
-  },
-
   edit: function(component, evt, helper) {
     var attributes = component.getAttributes();
     attributes.setValue("mode", "edit");
@@ -20,34 +12,24 @@
   },
 
   remove: function(component, evt, helper) {
-    var attributes = component.getAttributes();
+    var todo = component.get("v.todo");
     var deleteTodoEvent = $A.get("e.todomvc:deleteTodo");
     deleteTodoEvent.setParams({
-      "id": attributes.getRawValue("id")
+      "id": todo.id
     }).fire();
   },
 
   update: function(component, evt, helper) {
-    var attributes = component.getAttributes();
-    var evt = {
-      id: attributes.getRawValue("id"),
-      value: attributes.getRawValue("value"),
-      completed: attributes.getRawValue("completed")
-    };
+    var todo = component.get("v.todo");
     var updateTodoEvent = $A.get("e.todomvc:updateTodo");
-    updateTodoEvent.setParams(evt).fire();
-    //attributes.setValue("mode", "view");
+    updateTodoEvent.setParams(todo).fire();
   },
 
   complete: function(component, evt, helper) {
     var target = evt.getSource ? evt.getSource().getElement() : evt.target;
-    var attributes = component.getAttributes();
-    var evt = {
-      id: attributes.getRawValue("id"),
-      value: attributes.getRawValue("value"),
-      completed: target.checked
-    };
+    var todo = component.get("v.todo");
+    todo.completed = target.checked;
     var updateTodoEvent = $A.get("e.todomvc:updateTodo");
-    updateTodoEvent.setParams(evt).fire();
+    updateTodoEvent.setParams(todo).fire();
   }
 });

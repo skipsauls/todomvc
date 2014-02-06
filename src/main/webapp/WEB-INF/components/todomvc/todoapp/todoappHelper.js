@@ -24,7 +24,7 @@
     var filtered = component.getAttributes().getRawValue("filtered");
     filtered.setValue(items);
   },
-  
+
   filters: {
     active: function(todo) {
       return !todo.completed;
@@ -33,14 +33,14 @@
       return todo.completed;
     }
   },
-  
+
   createTodo: function(component, todo) {
     todo.id = todo.id || "" + Date.now();
     var todos = component.getValue("m.todos");
     todos.push(todo);
     this.saveTodos(component);
   },
-  
+
   loadTodos: function(component) {
     var storage = window.localStorage;
     var todos = storage.getItem("todos");
@@ -51,7 +51,7 @@
     for ( var i in todos) {
       items.push(todos[i]);
     }
-    
+
     this.updateCounts(component);
   },
 
