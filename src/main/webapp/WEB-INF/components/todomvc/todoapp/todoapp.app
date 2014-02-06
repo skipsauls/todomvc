@@ -18,26 +18,15 @@
       </aura:renderIf>
       <label for="toggle-all">Mark all as complete</label>
       <ul aura:id="todo-list" id="todo-list">
-      
         <aura:iteration items="{!v.filtered}" var="todo" indexVar="index">
           <todomvc:todo todo="{!todo}"/>
         </aura:iteration>
-         
-        <!--
-        <aura:iteration items="{!m.todos}" var="todo" indexVar="index">
-          <aura:renderIf
-            isTrue="{!or(v.location == '/', or(and(v.location == '/active', todo.completed == false), or(and(v.location == '/completed', todo.completed == true))))}">
-         	<todomvc:todo todo="{!todo}"/>
-          </aura:renderIf>
-        </aura:iteration>
-
-        -->
       </ul>
     </section>
     <aura:renderIf isTrue="{!m.todos.length > 0}">
       <footer id="footer">
         <span id="todo-count"><strong>{!v.remainingCount}</strong>
-          {!v.remainingCount != 1 ? ' items' : ' item'} left - completed: {!v.completedCount}
+          {!v.remainingCount != 1 ? ' items' : ' item'} left
         </span>
         <ul id="filters">
           <li>
@@ -52,14 +41,9 @@
             </a>
           </li>
         </ul>
-        <button id="clear-completed" onclick="{!c.clearCompletedTodos}" style="{!v.completedCount > 0 ? '' : 'display: none'}">Clear completed ({!v.completedCount})
+        <button id="clear-completed" onclick="{!c.clearCompletedTodos}" style="{!v.completedCount > 0 ? '' : 'display: none'}">
+          Clear completed ({!v.completedCount})
         </button>
-        <!--
-        <aura:renderIf isTrue="{!v.completedCount > 0}">
-          <button id="clear-completed" onclick="{!c.clearCompletedTodos}">Clear completed ({!v.completedCount})
-          </button>
-        </aura:renderIf>
-        -->
       </footer>
     </aura:renderIf>
   </section>
