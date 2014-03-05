@@ -16,22 +16,22 @@
   toggleAll: function(component, evt, helper) {
     var checked = evt.getSource().getElement().checked;
     var todos = component.getValue("m.todos");
-    for (var i = 0; i < todos.getLength(); i++) {
-      todos.getValue(i).getValue("completed").setValue(checked);
-    }
-    helper.saveTodos(component, todos);
+    todos.each(function(t, i) {
+      t.getValue("completed").setValue(checked);
+      helper.saveTodo(component, t);
+    });
+    helper.updateCounts(component);
   },
 
   clearCompletedTodos: function(component, evt, helper) {
     var todos = component.getValue("m.todos");
-    var items = [];
-    todos.each(function(t) {
-      if (!t.unwrap().completed) {
-        items.push(t.unwrap())
+    todos.each(function(t, i) {
+      if (t.getValue("completed").getValue()) {
+        helper.deleteTodo(component, {
+          id: t.getValue("id").getValue()
+        });
       }
     });
-    todos.setValue(items);
-    helper.saveTodos(component, todos);
   },
 
   newTodo: function(component, evt, helper) {

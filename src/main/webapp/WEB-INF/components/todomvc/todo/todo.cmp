@@ -5,7 +5,12 @@
     <div class="view">
       <input id="{!'completed_' + v.todo.id}" type="checkbox" class="toggle" checked="{!v.todo.completed ? 'checked' : ''}" onchange="{!c.complete}" />
       <aura:if isTrue="{!v.mode == 'view'}">
-        <label ondblclick="{!c.edit}">{!v.todo.value}</label>
+        <aura:if isTrue="{!$Browser.isPhone == true}">
+          <label onclick="{!c.edit}">{!v.todo.value}</label>
+          <aura:set attribute="else">
+            <label ondblclick="{!c.edit}">{!v.todo.value}</label>
+          </aura:set>
+        </aura:if>
         <ui:button class="destroy" label="" theme="" press="{!c.remove}" />
       </aura:if>
     </div>

@@ -38,7 +38,7 @@
     todo.id = todo.id || "" + Date.now();
     var todos = component.getValue("m.todos");
     todos.push(todo);
-    this.saveTodos(component);
+    this.saveTodo(component, todo);
   },
 
   loadTodos: function(component) {
@@ -55,7 +55,7 @@
     this.updateCounts(component);
   },
 
-  saveTodos: function(component) {
+  saveTodo: function(component, todo) {
     var todos = component.getValue("m.todos");
     var storage = window.localStorage;
     storage.setItem("todos", JSON.stringify(todos.unwrap()));
@@ -70,7 +70,7 @@
         t.getValue("completed").setValue(todo.completed);
       }
     });
-    this.saveTodos(component);
+    this.saveTodo(component, todo);
   },
 
   deleteTodo: function(component, todo) {
@@ -82,6 +82,6 @@
       }
     });
     todos.setValue(items);
-    this.saveTodos(component);
+    this.saveTodo(component, todo);
   }
 });
